@@ -82,7 +82,7 @@ namespace ExampleClientApp
                                     }
                                 }
                             });
-                            Console.WriteLine($"ServerInvokeProtocolA.CSOp4 result: {client.GetProtocol<ClientProtocol, ServerInvokeProtocolA>()?.CSOp4(rand.Next(0, 10000))}");
+                            Console.WriteLine($"ServerInvokeProtocolA.CSOp4(): {client.GetProtocol<ClientProtocol, ServerInvokeProtocolA>()?.CSOp4(rand.Next(0, 10000))}");
                             try
                             {
                                 client.GetProtocol<ClientProtocol, ServerInvokeProtocolA>().CSSomeExceptionMethod();

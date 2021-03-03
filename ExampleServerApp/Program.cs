@@ -19,8 +19,8 @@ namespace ExampleServerApp
 
             var server = new NoWCFServer(8866, nowcfSettings);
             server.HandleException = (e) => Console.WriteLine(e);
-            server.AddDuplexProtocol<ServerProtocol, ClientInvokeProtocol>();
-            server.AddProtocol<ServerProtocol2>();
+            server.AddDuplexProtocol<ServerProtocolA, ClientInvokeProtocol>();
+            server.AddProtocol<ServerProtocolB>();
             while (true)
             {
                 Console.WriteLine("Starting server..");

@@ -17,7 +17,7 @@ namespace ExampleClientApp.Protocols
 
         public void SCOp1(int x, int y)
         {
-            Console.WriteLine($"ClientProtocol.SCOp1 {x} {y}");
+            Console.WriteLine($"ClientProtocol.SCOp1({x}, {y})");
         }
 
     }

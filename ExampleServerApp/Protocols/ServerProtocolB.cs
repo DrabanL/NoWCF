@@ -3,11 +3,11 @@ using System;
 
 namespace ExampleServerApp.Protocols
 {
-    class ServerProtocol2 : IProtocol2
+    class ServerProtocolB : IProtocol2
     {
         public void TEST(string str)
         {
-            Console.WriteLine($"TEST: {str}");
+            Console.WriteLine($"ServerProtocolB.TEST: {str}");
         }
     }
 }
