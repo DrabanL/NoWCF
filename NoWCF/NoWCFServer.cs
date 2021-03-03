@@ -20,6 +20,8 @@ namespace NoWCF
         private SynchronizedCollection<ConnectionBase> _clients = new SynchronizedCollection<ConnectionBase>();
         public IReadOnlyCollection<ConnectionBase> GetConnectedClients() => _clients.AsReadOnly();
         public Action<Exception> HandleException;
+        public Action<NoWCFClient, Exception> HandleClientException;
+        public Action<NoWCFClient> OnClientConnectionClosed;
 
         public NoWCFServer(int port, NoWCFSettings settings = null)
         {
@@ -79,18 +81,13 @@ namespace NoWCF
 
         private void processConnection(Socket socket)
         {
-            var client = new NoWCFClient(socket, _settings)
+            var client = new NoWCFClient(socket, _settings);
+            client.OnConnectionClosed = () =>
             {
-                HandleException = (E) => Console.WriteLine(E),
-                HandleConnectionClosed = (cl) =>
-                {
-                    using (cl)
-                    {
-                        Console.WriteLine("CLOSED");
-                        _clients.Remove(cl);
-                    }
-                }
+                _clients.Remove(client);
+                OnClientConnectionClosed?.Invoke(client);
             };
+            client.HandleException = (ex) => HandleClientException?.Invoke(client, ex);
 
             _clients.Add(client);
 

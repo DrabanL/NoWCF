@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace NoWCF.Models
     public abstract class ConnectionBase : IConnectionBase
     {
         public Action<Exception> HandleException;
-        public Action<ConnectionBase> HandleConnectionClosed;
+        public Action OnConnectionClosed;
 
         public bool Connected => _networkStream != null && !Disconnected;
         public bool Disconnected;
@@ -22,6 +23,8 @@ namespace NoWCF.Models
         protected readonly NoWCFSettings _setings;
         protected NetworkStream _networkStream;
         protected Socket _socket;
+        public EndPoint RemoteEndPoint { get; protected set; }
+
         protected Dictionary<string, ProtocolSpecification> _protocols = new Dictionary<string, ProtocolSpecification>();
         private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> _callbackOperations = new ConcurrentDictionary<string, TaskCompletionSource<object>>();
         private readonly string _communicationKey;
@@ -400,7 +403,9 @@ namespace NoWCF.Models
             if (ex != null)
                 HandleException?.Invoke(ex);
 
-            HandleConnectionClosed?.Invoke(this);
+            OnConnectionClosed?.Invoke();
+
+            using (this) ;
         }
 
         private static SerializedOp createOperation(string protocol, string method, Dictionary<string, object> parameters, bool waitResponse, out string uniqueID)

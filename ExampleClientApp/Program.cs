@@ -31,15 +31,9 @@ namespace ExampleClientApp
                 {
                     while (true)
                     {
-                        var client = new NoWCFClient(nowcfSettings)
-                        {
-                            HandleException = (E) => Console.WriteLine(E),
-                            HandleConnectionClosed = (cl) =>
-                            {
-                                using (cl)
-                                    Console.WriteLine("CLOSED");
-                            }
-                        };
+                        var client = new NoWCFClient(nowcfSettings);
+                        client.HandleException = (e) => Console.WriteLine($"{client.RemoteEndPoint}; {e}");
+                        client.OnConnectionClosed = () => Console.WriteLine($"{client.RemoteEndPoint}; CLOSED");
 
                         try
                         {
@@ -87,7 +81,7 @@ namespace ExampleClientApp
                             {
                                 client.GetProtocol<ClientProtocol, ServerInvokeProtocolA>().CSSomeExceptionMethod();
                             }
-                            catch (Exception ex) { Console.WriteLine(ex); }
+                            catch (Exception ex) { Console.WriteLine(ex.Message); }
 
                             Thread.Sleep(750);
 

@@ -1,6 +1,7 @@
 ﻿using NoWCF.Models;
 using NoWCF.Utilities;
 using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace NoWCF
@@ -39,6 +40,7 @@ namespace NoWCF
             Console.WriteLine($"Connected ({host}:{port})");
 
             _socket = socket;
+            RemoteEndPoint = _socket.RemoteEndPoint;
             _networkStream = new NetworkStream(socket, false);
         }
 
@@ -47,10 +49,11 @@ namespace NoWCF
         /// </summary>
         public NoWCFClient(Socket socket, NoWCFSettings settings) : base(settings)
         {
-            Console.WriteLine($"Connected ({socket.RemoteEndPoint})");
-
             _socket = socket;
             _networkStream = new NetworkStream(socket, false);
+            RemoteEndPoint = _socket.RemoteEndPoint;
+
+            Console.WriteLine($"Connected ({RemoteEndPoint})");
         }
     }
 }

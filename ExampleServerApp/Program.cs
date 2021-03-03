@@ -19,6 +19,8 @@ namespace ExampleServerApp
 
             var server = new NoWCFServer(8866, nowcfSettings);
             server.HandleException = (e) => Console.WriteLine(e);
+            server.HandleClientException = (cl, e) => Console.WriteLine($"{cl.RemoteEndPoint}; {e}");
+            server.OnClientConnectionClosed = (cl) => Console.WriteLine($"{cl.RemoteEndPoint}; CLOSED");
             server.AddDuplexProtocol<ServerProtocolA, ClientInvokeProtocol>();
             server.AddProtocol<ServerProtocolB>();
             while (true)
